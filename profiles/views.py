@@ -50,23 +50,16 @@ def profile(request):
     if request.method == "POST":
         serializer = serializers.ProfileSerializer(profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    # update profile data
     elif request.method == "PUT":
-        if request.data.get("country") != None and request.data.get("country") != "":
+        if request.data.get("country") not in [None, ""]:
             profile.country_id = request.data.get("country")
-        if request.data.get("city") != None and request.data.get("city") != "":
+        if request.data.get("city") not in [None, ""]:
             profile.city_id = request.data.get("city")
-        if (
-            request.data.get("first_name") != None
-            and request.data.get("first_name") != ""
-        ):
+        if request.data.get("first_name") not in [None, ""]:
             profile.first_name = request.data.get("first_name")
-        if (
-            request.data.get("last_name") != None
-            and request.data.get("last_name") != ""
-        ):
+        if request.data.get("last_name") not in [None, ""]:
             profile.last_name = request.data.get("last_name")
-        if request.data.get("credit") != None and request.data.get("credit") != "":
+        if request.data.get("credit") not in [None, ""]:
             profile.credit = request.data.get("credit")
 
         profile.save()
@@ -74,7 +67,6 @@ def profile(request):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # delete profile and user
     elif request.method == "DELETE":
         user.delete()
         return Response(status=status.HTTP_200_OK)
@@ -98,7 +90,7 @@ def cart_details(request):
     if request.method == "PUT":
         user = get_object_or_404(Token, key=request.data.get("token")).user
         product = get_object_or_404(models.Cart, id=request.data.get("id"), user=user)
-        if request.data.get("quantity") != None and request.data.get("quantity") != "":
+        if request.data.get("quantity") not in [None, ""]:
             product.quantity = request.data.get("quantity")
             product.save()
         serializer = serializers.CartSerializer(product)

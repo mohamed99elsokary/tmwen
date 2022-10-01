@@ -33,27 +33,21 @@ def vendor_details(request, id):
     if request.method == "PUT":
         user = get_object_or_404(Token, key=id).user
         vendor = get_object_or_404(models.Vendor, user=user)
-        if request.data.get("country") != "None" and request.data.get("country") != "":
+        if request.data.get("country") not in ["None", ""]:
             vendor.country_id = request.data.get("country")
-        if request.data.get("city") != "None" and request.data.get("city") != "":
+        if request.data.get("city") not in ["None", ""]:
             vendor.city_id = request.data.get("city")
-        if request.data.get("name") != "None" and request.data.get("name") != "":
+        if request.data.get("name") not in ["None", ""]:
             vendor.name = request.data.get("name")
-        if request.data.get("LAT") != "None" and request.data.get("LAT") != "":
+        if request.data.get("LAT") not in ["None", ""]:
             vendor.LAT = request.data.get("LAT")
-        if request.data.get("LONG") != "None" and request.data.get("LONG") != "":
+        if request.data.get("LONG") not in ["None", ""]:
             vendor.LONG = request.data.get("LONG")
-        if request.data.get("address") != "None" and request.data.get("address") != "":
+        if request.data.get("address") not in ["None", ""]:
             vendor.address = request.data.get("address")
-        if (
-            request.data.get("open_time") != "None"
-            and request.data.get("open_time") != ""
-        ):
+        if request.data.get("open_time") not in ["None", ""]:
             vendor.open_time = request.data.get("open_time")
-        if (
-            request.data.get("close_time") != "None"
-            and request.data.get("close_time") != ""
-        ):
+        if request.data.get("close_time") not in ["None", ""]:
             vendor.close_time = request.data.get("close_time")
         vendor.save()
         serializer = serializers.VendorSerializer(vendor)
@@ -93,18 +87,14 @@ def product_details(request, id):
         user = get_object_or_404(Token, key=request.data.get("token")).user
         vendor = get_object_or_404(models.Vendor, user=user)
         product = get_object_or_404(models.Product, id=id)
-        if product.vendor == vendor:
-            if request.data.get("name") != "None" and request.data.get("name") != "":
-                product.name = request.data.get("name")
-            if request.data.get("price") != "None" and request.data.get("price") != "":
-                product.price = request.data.get("price")
-            if (
-                request.data.get("quantity") != "None"
-                and request.data.get("quantity") != ""
-            ):
-                product.quantity = request.data.get("quantity")
-            product.save()
-            serializer = serializers.ProductsSerializer(product)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
+        if product.vendor != vendor:
             return Response("Invalid Vendor Item", status=status.HTTP_400_BAD_REQUEST)
+        if request.data.get("name") not in ["None", ""]:
+            product.name = request.data.get("name")
+        if request.data.get("price") not in ["None", ""]:
+            product.price = request.data.get("price")
+        if request.data.get("quantity") not in ["None", ""]:
+            product.quantity = request.data.get("quantity")
+        product.save()
+        serializer = serializers.ProductsSerializer(product)
+        return Response(serializer.data, status=status.HTTP_200_OK)

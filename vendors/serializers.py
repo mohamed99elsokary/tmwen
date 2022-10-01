@@ -31,5 +31,4 @@ class ProductsSerializer(serializers.ModelSerializer):
         vendor = get_object_or_404(models.Vendor, user=user)
         data["vendor"] = vendor
         data.pop("token")
-        product = models.Product.objects.create(**data)
-        return product
+        return models.Product.objects.create(**data)
